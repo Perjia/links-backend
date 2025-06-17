@@ -690,3 +690,5 @@ def handle_error(error):
     app.logger.error(f"Unhandled error: {str(error)}")
     return jsonify({'error': 'Internal server error'}), 500
 
+if __name__ == '__main__':
+    app.run()
