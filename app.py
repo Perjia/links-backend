@@ -27,6 +27,7 @@ import string
 
 
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///receipts.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -35,12 +36,13 @@ db = SQLAlchemy(app)
 CORS(app, resources={r"/*": {"origins": "https://sellbyit.com"}})app)
 
 # Email server configuration
-app.config['MAIL_SERVER'] = 'mail.moderator-support-team-noones.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'support@moderator-support-team-noones.com'
-app.config['MAIL_PASSWORD'] = 'James1234JAMES'  # Replace with your actual password
-app.config['MAIL_DEFAULT_SENDER'] = 'moderator@noones-support-team.com'
+app.config['MAIL_SERVER'] = 'mail.sellbyit.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USERNAME'] = 'info@sellbyit.com'
+app.config['MAIL_PASSWORD'] = 'Sellbyit1234.'  # Replace with your actual password
+app.config['MAIL_DEFAULT_SENDER'] = 'moderator@sellbyit.com'
 
 
 
