@@ -36,13 +36,13 @@ db = SQLAlchemy(app)
 CORS(app, resources={r"/*": {"origins": "https://sellbyit.com"}})
 
 # Email server configuration
-app.config['MAIL_SERVER'] = 'mail.sellbyit.com'
+app.config['MAIL_SERVER'] = 'mail.monibyit.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USERNAME'] = 'info@sellbyit.com'
-app.config['MAIL_PASSWORD'] = 'Sellbyit1234.'  # Replace with your actual password
-app.config['MAIL_DEFAULT_SENDER'] = 'moderator@sellbyit.com'
+app.config['MAIL_USERNAME'] = 'support@monibyit.com'
+app.config['MAIL_PASSWORD'] = 'Monibyit1234.'  # Replace with your actual password
+app.config['MAIL_DEFAULT_SENDER'] = 'support@monibyit.com'
 
 
 
