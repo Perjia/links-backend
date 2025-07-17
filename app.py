@@ -236,7 +236,7 @@ class Receipt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.String(100), nullable=False)
     receiver_id = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
+    amount = db.Column(db.db.String(50), nullable=False)
     currency = db.Column(db.String(10), nullable=False)
     transaction_type = db.Column(db.String(50), nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
@@ -273,10 +273,10 @@ def generate_code():
         if not all([customer_username, my_payment_details, customer_payment_details, amount, currency, date_made, date_processed]):
             return jsonify({'error': 'All fields are required'}), 400
 
-        try:
-            float(amount)
-        except (ValueError, TypeError):
-            return jsonify({'error': 'Invalid amount format'}), 400
+        # try:
+        #     float(amount)
+        # except (ValueError, TypeError):
+        #     return jsonify({'error': 'Invalid amount format'}), 400
 
         code_entry = Code(
             customer_username=customer_username,
@@ -327,19 +327,17 @@ def generate_receipt():
         if payment_method not in allowed_payment_methods:
             return jsonify({'error': 'Invalid payment method'}), 400
 
-        try:
-            amount = float(amount)
-            commission = float(commission)
-            vat = float(vat)
-            total_amount = float(total_amount)
-            if amount <= 0 or commission < 0 or vat < 0 or total_amount <= 0:
-                return jsonify({'error': 'Numeric values must be positive'}), 400
-        except (ValueError, TypeError):
-            return jsonify({'error': 'Invalid numeric values'}), 400
+        # try:
+        #     amount = float(amount)
+        #     commission = float(commission)
+        #     vat = float(vat)
+        #     total_amount = float(total_amount)
+        #     if amount <= 0 or commission < 0 or vat < 0 or total_amount <= 0:
+        #         return jsonify({'error': 'Numeric values must be positive'}), 400
+        # except (ValueError, TypeError):
+        #     return jsonify({'error': 'Invalid numeric values'}), 400
 
-        calculated_total = amount + commission + vat
-        if abs(calculated_total - total_amount) > 0.01:
-            return jsonify({'error': 'Total amount mismatch'}), 400
+        calculated_total = amount
 
         receipt = Receipt(
             sender_id=sender_id, receiver_id=receiver_id, amount=amount, currency=currency,
