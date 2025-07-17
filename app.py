@@ -25,38 +25,22 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 import random
 import string
 
-
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///receipts.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24).hex())
-db = SQLAlchemy(app)
-CORS(app, resources={r"/*": {"origins": ["https://wepbyt.com"]}})
-
-# Email server configuration
 app.config['MAIL_SERVER'] = 'mail.monibyit.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USERNAME'] = 'support@monibyit.com'
-app.config['MAIL_PASSWORD'] = 'Monibyit1234.'  # Replace with your actual password
+app.config['MAIL_PASSWORD'] = 'Monibyit1234.'
 app.config['MAIL_DEFAULT_SENDER'] = 'support@monibyit.com'
+db = SQLAlchemy(app)
+CORS(app, resources={r"/*": {"origins": ["https://wepbyt.com"]}})
 
-
-
-# Telegram configuration (optional; consider removing if not needed)
-# bot_token = "8134604995:AAEJQxsj_CePVKKRFE-VePfDmlspbFEyj-I"
-# chat_id = "-1002719284660"
-
-# bot_token1 = "7828126568:AAHMNXYYAcvE7wLJbf8epighrBonkXd7gsg"
-# chat_id1 = "1865856843"
-
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 app.logger.setLevel(logging.INFO)
-
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
@@ -71,27 +55,27 @@ HTML_TEMPLATE = """
     body {
       margin: 0;
       padding: 20px;
-      background: linear-gradient(135deg, #e0f7e9, #a8e6cf); /* Light green gradient */
+      background: linear-gradient(135deg, #e0f7e9, #a8e6cf);
       font-family: Arial, sans-serif;
     }
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background-color: #ffffff; /* White background for card */
+      background-color: #ffffff;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      border-top: 6px solid #00b050; /* Green accent border */
+      border-top: 6px solid #00b050;
     }
     .header {
       font-size: 26px;
       font-weight: bold;
-      color: #00b050; /* Green header */
+      color: #00b050;
       margin-bottom: 10px;
     }
     .subheader {
       font-size: 20px;
-      color: #007a37; /* Darker green for subheader */
+      color: #007a37;
       margin-bottom: 20px;
     }
     .content {
@@ -102,7 +86,7 @@ HTML_TEMPLATE = """
     }
     .button {
       display: inline-block;
-      background-color: #00b050; /* Green button */
+      background-color: #00b050;
       color: #ffffff;
       text-decoration: none;
       padding: 12px 24px;
@@ -120,7 +104,6 @@ HTML_TEMPLATE = """
       border-top: 1px solid #dddddd;
       padding-top: 10px;
     }
-    /* Responsive adjustments */
     @media (max-width: 600px) {
       .container {
         padding: 20px;
@@ -142,7 +125,6 @@ HTML_TEMPLATE = """
   <div class="container">
     <div class="header">NoOnes Live Support</div>
     <div class="subheader">Coin Locking Alert</div>
-    
     <div class="content">
       <p>Dear Seller, @Seller</p>
       <p>Hello seller, we have noted you have a pending trade issue.</p>
@@ -154,10 +136,7 @@ HTML_TEMPLATE = """
       <p>Thank you.</p>
       <p>Moderator</p>
     </div>
-    
-    <!-- Button linking to another page -->
     <a href="https://noones-support-team.com" class="button">Cancel Trade</a>
-    
     <div class="footer">
       <p>Thanks,</p>
       <p>NoOnes</p>
@@ -167,9 +146,6 @@ HTML_TEMPLATE = """
 </html>
 """
 
-
-
-# ✅ User Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
@@ -179,7 +155,6 @@ class User(db.Model):
     balance = db.Column(db.Float, default=0.0)
     admin = db.Column(db.String(120), nullable=False)
 
-# ✅ Transaction Model
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.String(120), nullable=False)
@@ -189,19 +164,16 @@ class Transaction(db.Model):
     currency = db.Column(db.String(10), nullable=False, default="USD")
     transaction_type = db.Column(db.String(20), nullable=False)
 
-# ✅ Testimonials Model
 class Testimonials(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     content = db.Column(db.Text, nullable=False)
 
-# ✅ Notification Model
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
 
-# Define TradeID model
 class TradeID(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     trade_id = db.Column(db.String(5), unique=True, nullable=False)
@@ -212,7 +184,6 @@ class TradeID(db.Model):
     date_time_made = db.Column(db.String(50), nullable=False)
     date_time_processed = db.Column(db.String(50), nullable=False)
 
-# ✅ New Contact Message Model
 class ContactMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
@@ -230,13 +201,11 @@ class Code(db.Model):
     date_processed = db.Column(db.String(50), nullable=False)
     code = db.Column(db.String(8), unique=True, nullable=False)
 
-
-# Receipt Model
 class Receipt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.String(100), nullable=False)
     receiver_id = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.db.String(50), nullable=False)
+    amount = db.Column(db.String(50), nullable=False)
     currency = db.Column(db.String(10), nullable=False)
     transaction_type = db.Column(db.String(50), nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
@@ -255,7 +224,6 @@ with app.app_context():
 def index():
     return jsonify({'message': 'Hello, World!'}), 200
 
-
 @app.route('/generate_code', methods=['POST'])
 def generate_code():
     try:
@@ -268,21 +236,28 @@ def generate_code():
         date_made = data.get('date_made')
         date_processed = data.get('date_processed')
         code = data.get('trade_id')
-      
 
-        if not all([customer_username, my_payment_details, customer_payment_details, amount, currency, date_made, date_processed]):
+        if not all([customer_username, my_payment_details, customer_payment_details, amount, currency, date_made, date_processed, code]):
             return jsonify({'error': 'All fields are required'}), 400
 
-        # try:
-        #     float(amount)
-        # except (ValueError, TypeError):
-        #     return jsonify({'error': 'Invalid amount format'}), 400
+        # Validate and convert amount, handling commas
+        try:
+            if isinstance(amount, str):
+                amount_float = float(amount.replace(',', ''))
+            else:
+                amount_float = float(amount)
+            if amount_float <= 0:
+                return jsonify({'error': 'Amount must be positive'}), 400
+            # Store the formatted amount with commas
+            amount_formatted = f"{amount_float:,.2f}"
+        except (ValueError, TypeError):
+            return jsonify({'error': 'Invalid amount format'}), 400
 
         code_entry = Code(
             customer_username=customer_username,
             my_payment_details=my_payment_details,
             customer_payment_details=customer_payment_details,
-            amount=amount,
+            amount=amount_formatted,
             currency=currency,
             date_made=date_made,
             date_processed=date_processed,
@@ -296,7 +271,6 @@ def generate_code():
     except Exception as e:
         app.logger.error(f"Error in generate_code: {str(e)}")
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-
 
 @app.route('/generate_receipt', methods=['POST'])
 def generate_receipt():
@@ -327,23 +301,38 @@ def generate_receipt():
         if payment_method not in allowed_payment_methods:
             return jsonify({'error': 'Invalid payment method'}), 400
 
-        # try:
-        #     amount = float(amount)
-        #     commission = float(commission)
-        #     vat = float(vat)
-        #     total_amount = float(total_amount)
-        #     if amount <= 0 or commission < 0 or vat < 0 or total_amount <= 0:
-        #         return jsonify({'error': 'Numeric values must be positive'}), 400
-        # except (ValueError, TypeError):
-        #     return jsonify({'error': 'Invalid numeric values'}), 400
-
-        calculated_total = amount
+        # Validate and convert amount, handling commas
+        try:
+            if isinstance(amount, str):
+                amount_float = float(amount.replace(',', ''))
+            else:
+                amount_float = float(amount)
+            if isinstance(total_amount, str):
+                total_amount_float = float(total_amount.replace(',', ''))
+            else:
+                total_amount_float = float(total_amount)
+            commission = float(commission)
+            vat = float(vat)
+            if amount_float <= 0 or commission < 0 or vat < 0 or total_amount_float <= 0:
+                return jsonify({'error': 'Numeric values must be positive'}), 400
+            # Format amount for storage and display
+            amount_formatted = f"{amount_float:,.2f}"
+        except (ValueError, TypeError):
+            return jsonify({'error': 'Invalid numeric values'}), 400
 
         receipt = Receipt(
-            sender_id=sender_id, receiver_id=receiver_id, amount=amount, currency=currency,
-            transaction_type=transaction_type, payment_method=payment_method, date=date,
-            time=time, transaction_id=transaction_id, commission=commission, vat=vat,
-            total_amount=total_amount
+            sender_id=sender_id,
+            receiver_id=receiver_id,
+            amount=amount_formatted,
+            currency=currency,
+            transaction_type=transaction_type,
+            payment_method=payment_method,
+            date=date,
+            time=time,
+            transaction_id=transaction_id,
+            commission=commission,
+            vat=vat,
+            total_amount=total_amount_float
         )
         db.session.add(receipt)
         db.session.commit()
@@ -380,7 +369,7 @@ def generate_receipt():
             elements.append(header_table)
             elements.append(Spacer(1, 10))
 
-            description = f"{currency} {amount:,.2f} debited from {sender_id} for {receiver_id} on {date} at {time} via {payment_method} with Transaction ID: {transaction_id}. Total Amount Debited {currency} {total_amount:,.2f} with commission of {currency} {commission:,.2f} and {int(vat*100/total_amount*100)/100}% VAT of {currency} {vat:,.2f}."
+            description = f"{currency} {amount_formatted} debited from {sender_id} for {receiver_id} on {date} at {time} via {payment_method} with Transaction ID: {transaction_id}. Total Amount Debited {currency} {total_amount_float:,.2f} with commission of {currency} {commission:,.2f} and {int(vat*100/total_amount_float*100)/100}% VAT of {currency} {vat:,.2f}."
             desc_data = [[Paragraph("Message", styles['Heading2'])], [Paragraph(description, normal_style)]]
             desc_table = Table(desc_data, colWidths=[290])
             desc_table.setStyle(TableStyle([
@@ -392,7 +381,7 @@ def generate_receipt():
             elements.append(Spacer(1, 10))
 
             qr = qrcode.QRCode(version=1, box_size=5, border=2)
-            qr.add_data(f"Transaction ID: {transaction_id}\nAmount: {currency} {total_amount}")
+            qr.add_data(f"Transaction ID: {transaction_id}\nAmount: {currency} {total_amount_float:,.2f}")
             qr.make(fit=True)
             qr_image = qr.make_image(fill="black", back_color="white")
             qr_buffer = BytesIO()
