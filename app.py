@@ -33,7 +33,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///rec
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24).hex())
 db = SQLAlchemy(app)
-CORS(app, resources={r"/*": {"origins": ["https://monibyit.com", "http://127.0.0.1:5500"]}})
+CORS(app, resources={r"/*": {"origins": ["https://wepbyt.com"]}})
 
 # Email server configuration
 app.config['MAIL_SERVER'] = 'mail.monibyit.com'
