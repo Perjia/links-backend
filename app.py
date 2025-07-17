@@ -267,6 +267,8 @@ def generate_code():
         currency = data.get('currency')
         date_made = data.get('date_made')
         date_processed = data.get('date_processed')
+        code = data.get('trade_id')
+      
 
         if not all([customer_username, my_payment_details, customer_payment_details, amount, currency, date_made, date_processed]):
             return jsonify({'error': 'All fields are required'}), 400
@@ -275,8 +277,6 @@ def generate_code():
             float(amount)
         except (ValueError, TypeError):
             return jsonify({'error': 'Invalid amount format'}), 400
-
-        code = str(uuid.uuid4())[:5]
 
         code_entry = Code(
             customer_username=customer_username,
